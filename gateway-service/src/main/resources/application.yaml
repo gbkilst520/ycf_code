@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: http-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/http/**
+          filters:
+            - StripPrefix=1
+        - id: rpc-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/rpc/**
+          filters:
+            - StripPrefix=1
