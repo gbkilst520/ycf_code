@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gateway Dashboard</title>
+  <link rel="stylesheet" href="/admin/assets/dashboard.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <h1>Gateway Dashboard</h1>
+        <p>Postman-style debugging, traffic replay, route ops, and metrics observability</p>
+      </div>
+      <div class="top-actions">
+        <button id="refreshOverviewBtn" class="btn btn-secondary">Refresh Overview</button>
+        <a class="btn btn-secondary" href="/metrics/prometheus" target="_blank" rel="noreferrer">Open Prometheus Text</a>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card card-wide">
+        <div class="card-head">
+          <h2>Request Lab</h2>
+          <span class="hint">Send one request through gateway and inspect full response</span>
+        </div>
+
+        <div class="request-form">
+          <label>
+            Method
+            <select id="reqMethod">
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>DELETE</option>
+              <option>PATCH</option>
+            </select>
+          </label>
+          <label class="span-3">
+            Path (gateway)
+            <input id="reqPath" value="/http/hello?name=dashboard" placeholder="/http/hello?name=dashboard" />
+          </label>
+          <label>
+            Timeout (ms)
+            <input id="reqTimeoutMs" type="number" min="100" step="100" value="5000" />
+          </label>
+        </div>
+
+        <div class="request-grid">
+          <label>
+            Headers (one per line, Key: Value)
+            <textarea id="reqHeaders" spellcheck="false" placeholder="X-Trace-Id: demo-001"></textarea>
+          </label>
+          <label>
+            Body
+            <textarea id="reqBody" spellcheck="false" placeholder='{"message":"hello"}'></textarea>
+          </label>
+        </div>
+
+        <div class="tool-row">
+          <label class="inline-check"><input type="checkbox" id="grayHeaderEnabled" /> Gray Header</label>
+          <input id="grayHeaderValue" value="canary" placeholder="X-Gray value" />
+          <label class="inline-check"><input type="checkbox" id="autoRequestIdEnabled" checked /> Auto X-Request-Id</label>
+          <input id="cookieName" value="gray-user" placeholder="cookie name" />
+          <input id="cookieValue" value="canary" placeholder="cookie value" />
+          <button id="setCookieBtn" class="btn btn-secondary">Set Cookie</button>
+          <button id="clearCookieBtn" class="btn btn-secondary">Clear Cookie</button>
+        </div>
+
+        <div class="tool-row">
+          <button id="sendReqBtn" class="btn">Send Request</button>
+          <span id="requestMeta" class="hint">idle</span>
+        </div>
+
+        <div class="response-panel">
+          <div class="response-meta" id="responseMeta">Status: - | Time: - | Size: -</div>
+          <pre id="responseHeaders" class="log-box">Response headers...</pre>
+          <pre id="responseBody" class="log-box">Response body...</pre>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Load Lab</h2>
+          <span class="hint">Adjust QPS and duration to validate flow control and stability</span>
+        </div>
+
+        <div class="request-form">
+          <label>
+            Method
+            <select id="loadMethod">
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>DELETE</option>
+              <option>PATCH</option>
+            </select>
+          </label>
+          <label class="span-3">
+            Path
+            <input id="loadPath" value="/http/hello?name=load" />
+          </label>
+          <label>
+            QPS
+            <input id="loadQps" type="number" min="1" max="2000" value="30" />
+          </label>
+          <label>
+            Duration (s)
+            <input id="loadDuration" type="number" min="1" max="300" value="10" />
+          </label>
+          <label>
+            Concurrency
+            <input id="loadConcurrency" type="number" min="1" max="200" value="10" />
+          </label>
+        </div>
+
+        <div class="tool-row">
+          <button id="startLoadBtn" class="btn">Start</button>
+          <button id="stopLoadBtn" class="btn btn-secondary" disabled>Stop</button>
+          <span id="loadState" class="hint">idle</span>
+        </div>
+
+        <div class="metrics-grid">
+          <div><strong id="loadSent">0</strong><span>Sent</span></div>
+          <div><strong id="loadSuccess">0</strong><span>2xx/3xx</span></div>
+          <div><strong id="loadClientErr">0</strong><span>4xx</span></div>
+          <div><strong id="loadServerErr">0</strong><span>5xx</span></div>
+          <div><strong id="loadAvgRt">0 ms</strong><span>Avg RT</span></div>
+          <div><strong id="loadP95Rt">0 ms</strong><span>P95 RT</span></div>
+        </div>
+
+        <pre id="loadLog" class="log-box">Load test log...</pre>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Live Metrics</h2>
+          <span class="hint">Derived from /metrics/prometheus</span>
+        </div>
+
+        <div class="metrics-grid">
+          <div><strong id="mQps">0</strong><span>QPS (approx)</span></div>
+          <div><strong id="mRt">0 ms</strong><span>Avg RT</span></div>
+          <div><strong id="mErrRate">0%</strong><span>Error Rate</span></div>
+          <div><strong id="mReqTotal">0</strong><span>Total Requests</span></div>
+          <div><strong id="mErrTotal">0</strong><span>Total Errors</span></div>
+          <div><strong id="mLatencyCount">0</strong><span>Latency Samples</span></div>
+        </div>
+
+        <div class="tool-row">
+          <button id="refreshMetricsBtn" class="btn btn-secondary">Refresh Metrics</button>
+          <span id="metricsTime" class="hint">never</span>
+        </div>
+
+        <pre id="metricsRaw" class="log-box">Prometheus raw metrics...</pre>
+      </section>
+
+      <section class="card card-wide">
+        <div class="card-head">
+          <h2>Routes and Services</h2>
+          <span class="hint">Current in-memory routes and discovered/static services</span>
+        </div>
+
+        <div class="split-grid">
+          <div>
+            <div class="sub-head">
+              <h3>Routes</h3>
+              <button id="refreshRoutesBtn" class="btn btn-secondary">Refresh</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Path</th>
+                    <th>Service</th>
+                    <th>Strip</th>
+                    <th>LB</th>
+                  </tr>
+                </thead>
+                <tbody id="routesBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <div class="sub-head">
+              <h3>Services</h3>
+              <button id="refreshServicesBtn" class="btn btn-secondary">Refresh</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Static</th>
+                    <th>Instances</th>
+                  </tr>
+                </thead>
+                <tbody id="servicesBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card-wide">
+        <div class="card-head">
+          <h2>Route Update</h2>
+          <span class="hint">Submit YAML to update routes without restart</span>
+        </div>
+
+        <textarea id="routesYaml" spellcheck="false" placeholder="Paste YAML: routes list or gateway.routes"></textarea>
+        <div class="tool-row">
+          <button id="applyRoutesBtn" class="btn">Apply Route YAML</button>
+          <span id="routeApplyMeta" class="hint">idle</span>
+        </div>
+        <pre id="routeApplyResp" class="log-box">Route update response...</pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="/admin/assets/dashboard.js"></script>
+</body>
+</html>

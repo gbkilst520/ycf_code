@@ -1,0 +1,2 @@
+com.ycf.gateway.config.center.spi.NacosConfigCenterFactory
+com.ycf.gateway.config.center.spi.NoopConfigCenterFactory
