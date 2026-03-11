@@ -1,14 +1,14 @@
 :root {
-  --bg: #eef2f5;
-  --text: #12202d;
-  --muted: #4c6478;
-  --surface: #ffffff;
-  --surface-2: #f7fafc;
-  --line: #d6e0e8;
-  --accent: #0f766e;
-  --accent-dark: #0a5751;
-  --warning: #b45309;
-  --danger: #b91c1c;
+  --bg: #07100d;
+  --text: #d8efe6;
+  --muted: #97b7ab;
+  --surface: #0d1b16;
+  --surface-2: #12251e;
+  --line: #1f3b31;
+  --accent: #1fa272;
+  --accent-dark: #17845d;
+  --warning: #d6a24b;
+  --danger: #e06f6f;
   --radius: 12px;
 }
 
@@ -21,8 +21,8 @@ body {
   color: var(--text);
   font-family: "IBM Plex Sans", "Segoe UI", "PingFang SC", sans-serif;
   background:
-    radial-gradient(circle at top right, #d7f7f2 0%, transparent 40%),
-    radial-gradient(circle at bottom left, #f2e8d8 0%, transparent 35%),
+    radial-gradient(circle at top right, #15382d 0%, transparent 42%),
+    radial-gradient(circle at bottom left, #0f2b23 0%, transparent 38%),
     var(--bg);
 }
 
@@ -69,7 +69,7 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 14px;
-  box-shadow: 0 10px 24px rgba(18, 32, 45, 0.08);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
   min-width: 0;
 }
 
@@ -128,6 +128,19 @@ textarea {
   font-size: 13px;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: #7ea497;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2eb07f;
+  box-shadow: 0 0 0 2px rgba(46, 176, 127, 0.2);
+}
+
 textarea {
   min-height: 120px;
   resize: vertical;
@@ -180,7 +193,11 @@ textarea {
 }
 
 .btn-secondary {
-  background: #375a74;
+  background: #29473b;
+}
+
+.btn-secondary:hover {
+  background: #213b31;
 }
 
 .response-panel {
@@ -198,9 +215,9 @@ textarea {
   padding: 10px;
   min-height: 96px;
   border-radius: 8px;
-  border: 1px solid #102a43;
-  background: #091322;
-  color: #d2ecff;
+  border: 1px solid #1b3d32;
+  background: #06130f;
+  color: #bfe7d9;
   font-family: "IBM Plex Mono", "Consolas", monospace;
   font-size: 12px;
   overflow: auto;
@@ -269,9 +286,13 @@ td {
   vertical-align: top;
 }
 
+tbody tr:hover {
+  background: rgba(31, 162, 114, 0.08);
+}
+
 th {
-  background: #eef5f9;
-  color: #2a4459;
+  background: #173027;
+  color: #bde6d6;
   font-weight: 700;
 }
 

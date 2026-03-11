@@ -1,0 +1,77 @@
+gateway:
+  port: 8080
+
+  nacos:
+    serverAddr: nacos:8848
+    namespace: ""
+    username: nacos
+    password: nacos
+    register:
+      enabled: false
+      groupName: DEFAULT_GROUP
+    config:
+      enabled: false
+      dataId: gateway-routes.yaml
+      group: DEFAULT_GROUP
+      timeoutMs: 3000
+
+  filterChain:
+    pre:
+      - gray
+      - flow
+    post:
+      - responseHeader
+      - accessLog
+
+  flow:
+    enabled: false
+    global:
+      rate: 500
+      capacity: 1000
+    service:
+      http-service:
+        rate: 200
+        capacity: 400
+    ip:
+      127.0.0.1:
+        rate: 100
+        capacity: 200
+
+  resilience:
+    enabled: true
+    default:
+      failureRateThreshold: 50
+      slidingWindowSize: 20
+      minimumNumberOfCalls: 10
+      waitDurationInOpenStateMs: 5000
+      retryAttempts: 2
+      retryWaitMs: 100
+    service:
+      http-service:
+        retryAttempts: 2
+        retryWaitMs: 80
+    fallback:
+      statusCode: 503
+      body: "service is temporarily unavailable, please try later"
+
+  gray:
+    enabled: false
+    rules:
+      - id: gray-header-route
+        sourceServiceId: http-service
+        targetServiceId: http-service-gray
+        priority: 100
+        header:
+          name: X-Gray
+          value: canary
+
+  services:
+    - serviceId: http-service
+      baseUrl: http://http-service:8081
+
+  routes:
+    - id: http-service-route
+      path: /http/**
+      serviceId: http-service
+      stripPrefix: 1
+      loadBalance: ROUND_ROBIN

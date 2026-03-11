@@ -164,7 +164,7 @@
 
   async function handleSingleRequest() {
     nodes.sendReqBtn.disabled = true;
-    nodes.requestMeta.textContent = 'sending...';
+    nodes.requestMeta.textContent = '发送中...';
 
     const method = nodes.reqMethod.value;
     const path = normalizePath(nodes.reqPath.value);
@@ -182,15 +182,15 @@
     const body = nodes.reqBody.value || '';
     const result = await sendRequest(method, path, headers, body, timeoutMs);
 
-    nodes.requestMeta.textContent = `done at ${new Date().toLocaleTimeString()}`;
+    nodes.requestMeta.textContent = `完成于 ${new Date().toLocaleTimeString()}`;
     const size = new TextEncoder().encode(result.body || '').length;
-    nodes.responseMeta.textContent = `Status: ${result.status} ${result.statusText} | Time: ${formatMs(result.duration)} | Size: ${size} bytes`;
+    nodes.responseMeta.textContent = `状态: ${result.status} ${result.statusText} | 耗时: ${formatMs(result.duration)} | 大小: ${size} 字节`;
 
     const headerLines = [];
     result.headers.forEach((value, key) => {
       headerLines.push(`${key}: ${value}`);
     });
-    nodes.responseHeaders.textContent = headerLines.length ? headerLines.join('\n') : '(no headers)';
+    nodes.responseHeaders.textContent = headerLines.length ? headerLines.join('\n') : '（无响应头）';
 
     const text = result.body || '';
     const contentType = result.headers.get('content-type') || '';
@@ -210,22 +210,22 @@
   function setCookie() {
     const name = (nodes.cookieName.value || '').trim();
     if (!name) {
-      nodes.requestMeta.textContent = 'cookie name is empty';
+      nodes.requestMeta.textContent = 'Cookie 名称不能为空';
       return;
     }
     const value = nodes.cookieValue.value || '';
     document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/`;
-    nodes.requestMeta.textContent = `cookie set: ${name}`;
+    nodes.requestMeta.textContent = `已设置 Cookie: ${name}`;
   }
 
   function clearCookie() {
     const name = (nodes.cookieName.value || '').trim();
     if (!name) {
-      nodes.requestMeta.textContent = 'cookie name is empty';
+      nodes.requestMeta.textContent = 'Cookie 名称不能为空';
       return;
     }
     document.cookie = `${encodeURIComponent(name)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-    nodes.requestMeta.textContent = `cookie cleared: ${name}`;
+    nodes.requestMeta.textContent = `已清除 Cookie: ${name}`;
   }
 
   function startLoadTest() {
@@ -259,8 +259,8 @@
 
     nodes.startLoadBtn.disabled = true;
     nodes.stopLoadBtn.disabled = false;
-    nodes.loadState.textContent = `running | path=${path} | qps=${qps} | duration=${durationSec}s | concurrency=${concurrency}`;
-    nodes.loadLog.textContent = 'running load test...';
+    nodes.loadState.textContent = `运行中 | 路径=${path} | qps=${qps} | 时长=${durationSec}s | 并发=${concurrency}`;
+    nodes.loadLog.textContent = '压测运行中...';
 
     let timerId = 0;
     let renderId = 0;
@@ -290,15 +290,15 @@
       nodes.startLoadBtn.disabled = false;
       nodes.stopLoadBtn.disabled = true;
       render();
-      nodes.loadState.textContent = `stopped: ${reason}`;
+      nodes.loadState.textContent = `已停止: ${reason}`;
       nodes.loadLog.textContent = [
-        `reason: ${reason}`,
-        `sent=${stats.sent}`,
-        `success=${stats.success}`,
-        `clientErr=${stats.clientErr}`,
-        `serverErr=${stats.serverErr}`,
-        `inflight=${stats.inflight}`,
-        `time=${new Date().toLocaleTimeString()}`
+        `原因: ${reason}`,
+        `发送总数=${stats.sent}`,
+        `成功数=${stats.success}`,
+        `客户端错误=${stats.clientErr}`,
+        `服务端错误=${stats.serverErr}`,
+        `进行中请求=${stats.inflight}`,
+        `时间=${new Date().toLocaleTimeString()}`
       ].join('\n');
     }
 
@@ -321,14 +321,14 @@
       stats.inflight -= 1;
 
       if (performance.now() >= stopAt && stats.inflight === 0) {
-        stop('duration reached');
+        stop('达到设定时长');
       }
     }
 
     timerId = setInterval(() => {
       const now = performance.now();
       if (now >= stopAt && stats.inflight === 0) {
-        stop('duration reached');
+        stop('达到设定时长');
         return;
       }
       if (now >= stopAt) {
@@ -343,7 +343,7 @@
     renderId = setInterval(render, 500);
 
     loadJob = {
-      stop: () => stop('manual stop')
+      stop: () => stop('手动停止')
     };
   }
 
@@ -445,7 +445,7 @@
     const raw = await response.text();
 
     nodes.metricsRaw.textContent = raw;
-    nodes.metricsTime.textContent = `updated at ${new Date().toLocaleTimeString()}`;
+    nodes.metricsTime.textContent = `刷新于 ${new Date().toLocaleTimeString()}`;
 
     const snap = parsePrometheusSnapshot(raw);
     const now = Date.now();
@@ -531,14 +531,14 @@
     bindEvents();
     try {
       await refreshOverview();
-      nodes.requestMeta.textContent = 'ready';
+      nodes.requestMeta.textContent = '就绪';
     } catch (error) {
-      nodes.requestMeta.textContent = `init failed: ${String(error)}`;
+      nodes.requestMeta.textContent = `初始化失败: ${String(error)}`;
     }
 
     setInterval(() => {
       refreshMetrics().catch((error) => {
-        nodes.metricsTime.textContent = `metrics refresh failed: ${String(error)}`;
+        nodes.metricsTime.textContent = `指标刷新失败: ${String(error)}`;
       });
     }, 4000);
   }

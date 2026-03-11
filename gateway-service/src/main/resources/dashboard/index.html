@@ -1,34 +1,34 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gateway Dashboard</title>
+  <title>网关控制台</title>
   <link rel="stylesheet" href="/admin/assets/dashboard.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <h1>Gateway Dashboard</h1>
-        <p>Postman-style debugging, traffic replay, route ops, and metrics observability</p>
+        <h1>网关控制台</h1>
+        <p>请求调试、流量压测、路由运维与指标观测一体化面板</p>
       </div>
       <div class="top-actions">
-        <button id="refreshOverviewBtn" class="btn btn-secondary">Refresh Overview</button>
-        <a class="btn btn-secondary" href="/metrics/prometheus" target="_blank" rel="noreferrer">Open Prometheus Text</a>
+        <button id="refreshOverviewBtn" class="btn btn-secondary">刷新总览</button>
+        <a class="btn btn-secondary" href="/metrics/prometheus" target="_blank" rel="noreferrer">打开 Prometheus 文本</a>
       </div>
     </header>
 
     <main class="grid">
       <section class="card card-wide">
         <div class="card-head">
-          <h2>Request Lab</h2>
-          <span class="hint">Send one request through gateway and inspect full response</span>
+          <h2>请求调试</h2>
+          <span class="hint">通过网关发送单次请求并查看完整响应</span>
         </div>
 
         <div class="request-form">
           <label>
-            Method
+            请求方法
             <select id="reqMethod">
               <option>GET</option>
               <option>POST</option>
@@ -38,57 +38,57 @@
             </select>
           </label>
           <label class="span-3">
-            Path (gateway)
+            请求路径（网关）
             <input id="reqPath" value="/http/hello?name=dashboard" placeholder="/http/hello?name=dashboard" />
           </label>
           <label>
-            Timeout (ms)
+            超时时间（毫秒）
             <input id="reqTimeoutMs" type="number" min="100" step="100" value="5000" />
           </label>
         </div>
 
         <div class="request-grid">
           <label>
-            Headers (one per line, Key: Value)
+            请求头（每行一条，格式 Key: Value）
             <textarea id="reqHeaders" spellcheck="false" placeholder="X-Trace-Id: demo-001"></textarea>
           </label>
           <label>
-            Body
+            请求体
             <textarea id="reqBody" spellcheck="false" placeholder='{"message":"hello"}'></textarea>
           </label>
         </div>
 
         <div class="tool-row">
-          <label class="inline-check"><input type="checkbox" id="grayHeaderEnabled" /> Gray Header</label>
-          <input id="grayHeaderValue" value="canary" placeholder="X-Gray value" />
-          <label class="inline-check"><input type="checkbox" id="autoRequestIdEnabled" checked /> Auto X-Request-Id</label>
-          <input id="cookieName" value="gray-user" placeholder="cookie name" />
-          <input id="cookieValue" value="canary" placeholder="cookie value" />
-          <button id="setCookieBtn" class="btn btn-secondary">Set Cookie</button>
-          <button id="clearCookieBtn" class="btn btn-secondary">Clear Cookie</button>
+          <label class="inline-check"><input type="checkbox" id="grayHeaderEnabled" /> 灰度请求头</label>
+          <input id="grayHeaderValue" value="canary" placeholder="X-Gray 值" />
+          <label class="inline-check"><input type="checkbox" id="autoRequestIdEnabled" checked /> 自动生成 X-Request-Id</label>
+          <input id="cookieName" value="gray-user" placeholder="Cookie 名称" />
+          <input id="cookieValue" value="canary" placeholder="Cookie 值" />
+          <button id="setCookieBtn" class="btn btn-secondary">设置 Cookie</button>
+          <button id="clearCookieBtn" class="btn btn-secondary">清除 Cookie</button>
         </div>
 
         <div class="tool-row">
-          <button id="sendReqBtn" class="btn">Send Request</button>
-          <span id="requestMeta" class="hint">idle</span>
+          <button id="sendReqBtn" class="btn">发送请求</button>
+          <span id="requestMeta" class="hint">空闲</span>
         </div>
 
         <div class="response-panel">
-          <div class="response-meta" id="responseMeta">Status: - | Time: - | Size: -</div>
-          <pre id="responseHeaders" class="log-box">Response headers...</pre>
-          <pre id="responseBody" class="log-box">Response body...</pre>
+          <div class="response-meta" id="responseMeta">状态: - | 耗时: - | 大小: -</div>
+          <pre id="responseHeaders" class="log-box">响应头...</pre>
+          <pre id="responseBody" class="log-box">响应体...</pre>
         </div>
       </section>
 
       <section class="card">
         <div class="card-head">
-          <h2>Load Lab</h2>
-          <span class="hint">Adjust QPS and duration to validate flow control and stability</span>
+          <h2>压测实验</h2>
+          <span class="hint">调整 QPS 与时长，验证限流和稳定性</span>
         </div>
 
         <div class="request-form">
           <label>
-            Method
+            请求方法
             <select id="loadMethod">
               <option>GET</option>
               <option>POST</option>
@@ -98,7 +98,7 @@
             </select>
           </label>
           <label class="span-3">
-            Path
+            请求路径
             <input id="loadPath" value="/http/hello?name=load" />
           </label>
           <label>
@@ -106,77 +106,77 @@
             <input id="loadQps" type="number" min="1" max="2000" value="30" />
           </label>
           <label>
-            Duration (s)
+            持续时间（秒）
             <input id="loadDuration" type="number" min="1" max="300" value="10" />
           </label>
           <label>
-            Concurrency
+            并发数
             <input id="loadConcurrency" type="number" min="1" max="200" value="10" />
           </label>
         </div>
 
         <div class="tool-row">
-          <button id="startLoadBtn" class="btn">Start</button>
-          <button id="stopLoadBtn" class="btn btn-secondary" disabled>Stop</button>
-          <span id="loadState" class="hint">idle</span>
+          <button id="startLoadBtn" class="btn">开始</button>
+          <button id="stopLoadBtn" class="btn btn-secondary" disabled>停止</button>
+          <span id="loadState" class="hint">空闲</span>
         </div>
 
         <div class="metrics-grid">
-          <div><strong id="loadSent">0</strong><span>Sent</span></div>
-          <div><strong id="loadSuccess">0</strong><span>2xx/3xx</span></div>
-          <div><strong id="loadClientErr">0</strong><span>4xx</span></div>
-          <div><strong id="loadServerErr">0</strong><span>5xx</span></div>
-          <div><strong id="loadAvgRt">0 ms</strong><span>Avg RT</span></div>
-          <div><strong id="loadP95Rt">0 ms</strong><span>P95 RT</span></div>
+          <div><strong id="loadSent">0</strong><span>发送总数</span></div>
+          <div><strong id="loadSuccess">0</strong><span>成功 (2xx/3xx)</span></div>
+          <div><strong id="loadClientErr">0</strong><span>客户端错误 (4xx)</span></div>
+          <div><strong id="loadServerErr">0</strong><span>服务端错误 (5xx)</span></div>
+          <div><strong id="loadAvgRt">0 ms</strong><span>平均响应时间</span></div>
+          <div><strong id="loadP95Rt">0 ms</strong><span>P95 响应时间</span></div>
         </div>
 
-        <pre id="loadLog" class="log-box">Load test log...</pre>
+        <pre id="loadLog" class="log-box">压测日志...</pre>
       </section>
 
       <section class="card">
         <div class="card-head">
-          <h2>Live Metrics</h2>
-          <span class="hint">Derived from /metrics/prometheus</span>
+          <h2>实时指标</h2>
+          <span class="hint">数据来源：/metrics/prometheus</span>
         </div>
 
         <div class="metrics-grid">
-          <div><strong id="mQps">0</strong><span>QPS (approx)</span></div>
-          <div><strong id="mRt">0 ms</strong><span>Avg RT</span></div>
-          <div><strong id="mErrRate">0%</strong><span>Error Rate</span></div>
-          <div><strong id="mReqTotal">0</strong><span>Total Requests</span></div>
-          <div><strong id="mErrTotal">0</strong><span>Total Errors</span></div>
-          <div><strong id="mLatencyCount">0</strong><span>Latency Samples</span></div>
+          <div><strong id="mQps">0</strong><span>QPS（近似）</span></div>
+          <div><strong id="mRt">0 ms</strong><span>平均响应时间</span></div>
+          <div><strong id="mErrRate">0%</strong><span>错误率</span></div>
+          <div><strong id="mReqTotal">0</strong><span>总请求数</span></div>
+          <div><strong id="mErrTotal">0</strong><span>总错误数</span></div>
+          <div><strong id="mLatencyCount">0</strong><span>延迟样本数</span></div>
         </div>
 
         <div class="tool-row">
-          <button id="refreshMetricsBtn" class="btn btn-secondary">Refresh Metrics</button>
-          <span id="metricsTime" class="hint">never</span>
+          <button id="refreshMetricsBtn" class="btn btn-secondary">刷新指标</button>
+          <span id="metricsTime" class="hint">尚未刷新</span>
         </div>
 
-        <pre id="metricsRaw" class="log-box">Prometheus raw metrics...</pre>
+        <pre id="metricsRaw" class="log-box">Prometheus 原始指标...</pre>
       </section>
 
       <section class="card card-wide">
         <div class="card-head">
-          <h2>Routes and Services</h2>
-          <span class="hint">Current in-memory routes and discovered/static services</span>
+          <h2>路由与服务</h2>
+          <span class="hint">当前内存路由与服务实例（静态/发现）</span>
         </div>
 
         <div class="split-grid">
           <div>
             <div class="sub-head">
-              <h3>Routes</h3>
-              <button id="refreshRoutesBtn" class="btn btn-secondary">Refresh</button>
+              <h3>路由列表</h3>
+              <button id="refreshRoutesBtn" class="btn btn-secondary">刷新</button>
             </div>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Path</th>
-                    <th>Service</th>
-                    <th>Strip</th>
-                    <th>LB</th>
+                    <th>路由 ID</th>
+                    <th>路径</th>
+                    <th>服务</th>
+                    <th>裁剪段数</th>
+                    <th>负载策略</th>
                   </tr>
                 </thead>
                 <tbody id="routesBody"></tbody>
@@ -186,16 +186,16 @@
 
           <div>
             <div class="sub-head">
-              <h3>Services</h3>
-              <button id="refreshServicesBtn" class="btn btn-secondary">Refresh</button>
+              <h3>服务列表</h3>
+              <button id="refreshServicesBtn" class="btn btn-secondary">刷新</button>
             </div>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Service</th>
-                    <th>Static</th>
-                    <th>Instances</th>
+                    <th>服务</th>
+                    <th>静态地址</th>
+                    <th>实例</th>
                   </tr>
                 </thead>
                 <tbody id="servicesBody"></tbody>
@@ -207,16 +207,16 @@
 
       <section class="card card-wide">
         <div class="card-head">
-          <h2>Route Update</h2>
-          <span class="hint">Submit YAML to update routes without restart</span>
+          <h2>路由热更新</h2>
+          <span class="hint">提交 YAML 动态更新路由（无需重启）</span>
         </div>
 
-        <textarea id="routesYaml" spellcheck="false" placeholder="Paste YAML: routes list or gateway.routes"></textarea>
+        <textarea id="routesYaml" spellcheck="false" placeholder="粘贴 YAML：支持 routes 列表或 gateway.routes 结构"></textarea>
         <div class="tool-row">
-          <button id="applyRoutesBtn" class="btn">Apply Route YAML</button>
-          <span id="routeApplyMeta" class="hint">idle</span>
+          <button id="applyRoutesBtn" class="btn">应用路由 YAML</button>
+          <span id="routeApplyMeta" class="hint">空闲</span>
         </div>
-        <pre id="routeApplyResp" class="log-box">Route update response...</pre>
+        <pre id="routeApplyResp" class="log-box">路由更新响应...</pre>
       </section>
     </main>
   </div>
